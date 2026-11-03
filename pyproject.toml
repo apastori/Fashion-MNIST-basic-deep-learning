@@ -1,0 +1,45 @@
+[tool.black]
+line-length = 79
+target-version = ["py313"]  # your Python version
+skip-string-normalization = true  # <-- keeps single quotes
+
+[tool.ruff]
+line-length = 79  # Match Black's line length
+target-version = "py313"
+fix = false
+exclude = [".venv", "build", "dist", "__pycache__", ".git"]
+output-format = "full"  # Detailed output for better debugging
+
+[tool.ruff.format]
+quote-style = "single"  # Use single quotes
+skip-magic-trailing-comma = false
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "F",  # Pyflakes
+    "W",  # pycodestyle warnings
+    "I",  # isort
+    "B",  # flake8-bugbear (catches subtle bugs)
+    "D",  # pydocstyle (docstring linting)
+    "UP", # pyupgrade (modern Python syntax)
+]
+ignore = [
+    "E501",  # Black handles line length
+    "D203",  # ignore blank line before class (conflicts with D211)
+    "D213",  # ignore multiline docstring rule conflict
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"]  # Ignore docstring checks in tests
+
+# MyPy for type checking
+[tool.mypy]
+python_version = "3.13"
+strict = true
+ignore_missing_imports = true
+mypy_path = "src"
+explicit_package_bases = true
+# The codebase annotates NumPy arrays as np.ndarray, not ndarray[Any, dtype]
+disallow_any_generics = false
+exclude = [".venv", "build", "dist", "__pycache__", ".git"]
