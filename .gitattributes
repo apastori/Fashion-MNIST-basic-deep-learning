@@ -1,0 +1,37 @@
+# Normalize text files to LF in the repository
+* text=auto eol=lf
+
+# Source and config
+*.py text eol=lf
+*.pyi text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.gitignore text eol=lf
+*.editorconfig text eol=lf
+Makefile text eol=lf
+
+# Windows scripts keep CRLF when checked out on Windows
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Fashion-MNIST / IDX binary datasets (never treat as text)
+*.ubyte binary
+*-ubyte binary
+*.idx1-ubyte binary
+*.idx3-ubyte binary
+
+# Other binaries
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.whl binary
