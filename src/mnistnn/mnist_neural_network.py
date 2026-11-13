@@ -1,5 +1,7 @@
 """Provide the Fashion-MNIST neural-network implementation."""
 
+from pathlib import Path
+
 import numpy as np
 
 from mnistnn.functions.CrossEntropyLoss import CrossEntropyLoss
@@ -174,3 +176,40 @@ class MNISTNeuralNetwork:
 
         accuracy: float = float(np.mean(predictions == labels))
         return accuracy
+
+    def save_weights(self, path: str | Path) -> None:
+        """Save layer weights and biases to an ``.npz`` file."""
+        arrays_model_weights: dict[str, np.ndarray] = {}
+        for index, layer in enumerate(self.layers):
+            weights: np.ndarray
+            bias: np.ndarray
+            weights, bias = layer.get_params()
+            arrays_model_weights[f'weights_{index}'] = weights
+            arrays_model_weights[f'bias_{index}'] = bias
+        np.savez(path, **arrays_model_weights)
+
+    def load_weights(self, path: str | Path) -> None:
+        """Load layer weights and biases from an ``.npz`` file."""
+        with np.load(path) as arrays_model_weights:
+            for index, layer in enumerate(self.layers):
+                weights: np.ndarray
+                bias: np.ndarray
+                weights, bias = layer.get_params()
+                loaded_weights: np.ndarray = arrays_model_weights[
+                    f'weights_{index}'
+                ]
+                loaded_bias: np.ndarray = arrays_model_weights[f'bias_{index}']
+                if loaded_weights.shape != weights.shape:
+                    raise ValueError(
+                        f'Weight shape mismatch for layer {index}: '
+                        f'expected {weights.shape}, got {loaded_weights.shape}'
+                    )
+                if loaded_bias.shape != bias.shape:
+                    raise ValueError(
+                        f'Bias shape mismatch for layer {index}: '
+                        f'expected {bias.shape}, got {loaded_bias.shape}'
+                    )
+                weights[:] = loaded_weights
+                bias[:] = loaded_bias
+        self._weight_velocities = None
+        self._bias_velocities = None
