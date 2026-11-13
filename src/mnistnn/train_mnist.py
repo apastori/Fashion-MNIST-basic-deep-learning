@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import math
+from pathlib import Path
 from time import perf_counter
 from typing import TYPE_CHECKING
 
@@ -27,6 +28,8 @@ logger = logging.getLogger(__name__)
 
 LEARNING_RATE_FLOOR: float = 1e-4
 HORIZONTAL_FLIP_PROBABILITY: float = 0.5
+MODELS_DIR: Path = Path(__file__).resolve().parents[2] / 'models'
+DEFAULT_WEIGHTS_PATH: Path = MODELS_DIR / 'fashion_mnist.npz'
 
 
 def _prepare_images(images: np.ndarray, dataset_name: str) -> np.ndarray:
@@ -49,6 +52,29 @@ def _prepare_images(images: np.ndarray, dataset_name: str) -> np.ndarray:
 def _normalize_images(images: np.ndarray) -> np.ndarray:
     """Scale pixels to [0, 1] and mean-center them to [-0.5, 0.5]."""
     return images.astype(np.float64) / 255.0 - 0.5
+
+
+def _evaluate_test_accuracy(
+    network: MNISTNeuralNetwork,
+    test_images: np.ndarray,
+    test_labels: np.ndarray,
+    batch_size: int,
+) -> float:
+    """Return top-1 accuracy on the normalized Fashion-MNIST test set."""
+    test_size: int = len(test_images)
+    correct_predictions: int = 0
+    for start in range(0, test_size, batch_size):
+        end: int = start + batch_size
+        test_batch_images: np.ndarray = _normalize_images(
+            test_images[start:end]
+        )
+        predictions: np.ndarray = network.predict(
+            test_batch_images, tta_hflip=True
+        )
+        correct_predictions += int(
+            np.count_nonzero(predictions == test_labels[start:end])
+        )
+    return correct_predictions / test_size
 
 
 def _cosine_learning_rate(
@@ -196,9 +222,25 @@ def train_mnist(
     )
 
     network: MNISTNeuralNetwork = MNISTNeuralNetwork()
-    rng: np.random.Generator = np.random.default_rng()
     train_images = prepared_train_images
     test_images = prepared_test_images
+
+    if DEFAULT_WEIGHTS_PATH.is_file():
+        logger.info(
+            'Found existing weights at %s; loading and skipping training',
+            DEFAULT_WEIGHTS_PATH,
+        )
+        network.load_weights(DEFAULT_WEIGHTS_PATH)
+        test_accuracy: float = _evaluate_test_accuracy(
+            network, test_images, test_labels, batch_size
+        )
+        logger.info(
+            'Loaded model test accuracy: %.2f%%',
+            test_accuracy * 100,
+        )
+        return network
+
+    rng: np.random.Generator = np.random.default_rng()
     # One-hot targets for the 10 Fashion-MNIST classes (labels 0-9)
     # Matrix 10 X 10
     class_targets: np.ndarray = np.eye(10, dtype=np.float64)
@@ -235,32 +277,24 @@ def train_mnist(
             )
             total_loss += avg_loss * len(batch_indices)
         # Evaluate the model on the test set after each epoch
-        correct_predictions: int = 0
-        for start in range(0, test_size, batch_size):
-            end: int = start + batch_size
-            test_batch_images: np.ndarray = _normalize_images(
-                test_images[start:end]
-            )
-            predictions: np.ndarray = network.predict(
-                test_batch_images, tta_hflip=True
-            )
-            correct_predictions += int(
-                np.count_nonzero(predictions == test_labels[start:end])
-            )
-
         average_loss: float = total_loss / train_size
-        test_accuracy: float = correct_predictions / test_size
+        epoch_test_accuracy: float = _evaluate_test_accuracy(
+            network, test_images, test_labels, batch_size
+        )
         logger.info(
             'Epoch %d/%d - loss: %.4f - test accuracy: %.2f%% - '
             'learning_rate=%g - duration: %.2fs',
             epoch + 1,
             epochs,
             average_loss,
-            test_accuracy * 100,
+            epoch_test_accuracy * 100,
             current_learning_rate,
             perf_counter() - epoch_started_at,
         )
 
+    MODELS_DIR.mkdir(parents=True, exist_ok=True)
+    network.save_weights(DEFAULT_WEIGHTS_PATH)
+    logger.info('Saved trained weights to %s', DEFAULT_WEIGHTS_PATH)
     logger.info(
         'Fashion-MNIST training completed in %.2fs',
         perf_counter() - training_started_at,
