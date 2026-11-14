@@ -51,7 +51,7 @@ Evaluation metric is **top-1 accuracy on the official Fashion-MNIST test set** (
 | Epochs | 80 |
 | Wall time (CPU, approx.) | ~15–20 minutes |
 
-**How to read these numbers:** report the **final-epoch** test accuracy as the result for the trained model returned by `train_mnist()`. Peak-over-epochs is slightly higher but is not checkpointed unless you add that yourself.
+**How to read these numbers:** report the **final-epoch** test accuracy as the result for the trained model returned by `train_mnist()` (also saved to `models/fashion_mnist.npz`). Peak-over-epochs is slightly higher but only the final weights are saved.
 
 For context, a plain MLP on Fashion-MNIST often lands near the high 80s to low 90s. Small CNNs usually do better; this project intentionally stays fully connected / NumPy-only.
 
@@ -87,7 +87,26 @@ A `Makefile` is included to provide a simple and familiar interface for common c
 
 Install dependencies first (`invoke install` or `make install`). Run every command from the project root. The package lives under `src/`, so Python needs `PYTHONPATH=src` (the Invoke and Make targets set this for you).
 
-All of the commands below run `python -m mnistnn`, which calls `train_mnist()` with the defaults described under **Model** (80 epochs, batch size 64, `visualize=True`, pixels scaled to `[-0.5, 0.5]`). Training progress is written to `log/mnist-training.log`.
+All of the commands below run `python -m mnistnn`, which calls `train_mnist()` with the defaults described under **Model** (80 epochs, batch size 64, `visualize=True`, pixels scaled to `[-0.5, 0.5]`).
+
+Weights are saved to `models/fashion_mnist.npz` after a full training run. If that file already exists, the same train command loads it, skips training, and reports test accuracy. Weight files under `models/` are intended to be tracked by git.
+
+`models/fashion_mnist.npz` is a NumPy archive with one weights matrix and one bias row per layer (`784 → 512 → 256 → 128 → 10`):
+
+| Key | Shape |
+|---|---|
+| `weights_0` | `(784, 512)` |
+| `bias_0` | `(1, 512)` |
+| `weights_1` | `(512, 256)` |
+| `bias_1` | `(1, 256)` |
+| `weights_2` | `(256, 128)` |
+| `bias_2` | `(1, 128)` |
+| `weights_3` | `(128, 10)` |
+| `bias_3` | `(1, 10)` |
+
+If you want to train the model without using saved weights, just delete the files in the `models/` subdirectory, then the program is going to train the model again.
+
+Training progress is written to `log/mnist-training.log`.
 
 ### Invoke
 
