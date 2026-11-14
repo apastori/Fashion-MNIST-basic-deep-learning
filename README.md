@@ -29,7 +29,7 @@ Class labels:
 | 8 | Bag |
 | 9 | Ankle boot |
 
-The IDX files live under `src/data/` and are loaded by the existing MNIST-compatible loader (`mnistnn`). The package and API names still say `mnist` because the file format is identical; the bytes on disk are Fashion-MNIST.
+The IDX files live under `src/data/` and are loaded by the `fashion_mnistnn` package. Filenames on disk keep the classic MNIST IDX naming; the bytes are Fashion-MNIST.
 
 ## Model
 
@@ -41,7 +41,7 @@ Hidden layers use ReLU with dropout `0.1 / 0.2 / 0.2`. Training uses SGD with mo
 
 ## Results
 
-Evaluation metric is **top-1 accuracy on the official Fashion-MNIST test set** (10,000 images). Training loss is mean batch cross-entropy over the epoch. Numbers below are from completed default runs logged in `log/mnist-training.log` and can vary slightly by random seed.
+Evaluation metric is **top-1 accuracy on the official Fashion-MNIST test set** (10,000 images). Training loss is mean batch cross-entropy over the epoch. Numbers below are from completed default runs logged in `log/fashion-mnist-training.log` and can vary slightly by random seed.
 
 | Metric | Typical value |
 |---|---|
@@ -51,7 +51,7 @@ Evaluation metric is **top-1 accuracy on the official Fashion-MNIST test set** (
 | Epochs | 80 |
 | Wall time (CPU, approx.) | ~15–20 minutes |
 
-**How to read these numbers:** report the **final-epoch** test accuracy as the result for the trained model returned by `train_mnist()` (also saved to `models/fashion_mnist.npz`). Peak-over-epochs is slightly higher but only the final weights are saved.
+**How to read these numbers:** report the **final-epoch** test accuracy as the result for the trained model returned by `train_fashion_mnist()` (also saved to `models/fashion_mnist.npz`). Peak-over-epochs is slightly higher but only the final weights are saved.
 
 For context, a plain MLP on Fashion-MNIST often lands near the high 80s to low 90s. Small CNNs usually do better; this project intentionally stays fully connected / NumPy-only.
 
@@ -87,7 +87,7 @@ A `Makefile` is included to provide a simple and familiar interface for common c
 
 Install dependencies first (`invoke install` or `make install`). Run every command from the project root. The package lives under `src/`, so Python needs `PYTHONPATH=src` (the Invoke and Make targets set this for you).
 
-All of the commands below run `python -m mnistnn`, which calls `train_mnist()` with the defaults described under **Model** (80 epochs, batch size 64, `visualize=True`, pixels scaled to `[-0.5, 0.5]`).
+All of the commands below run `python -m fashion_mnistnn`, which calls `train_fashion_mnist()` with the defaults described under **Model** (80 epochs, batch size 64, `visualize=True`, pixels scaled to `[-0.5, 0.5]`).
 
 Weights are saved to `models/fashion_mnist.npz` after a full training run. If that file already exists, the same train command loads it, skips training, and reports test accuracy. Weight files under `models/` are intended to be tracked by git.
 
@@ -106,7 +106,7 @@ Weights are saved to `models/fashion_mnist.npz` after a full training run. If th
 
 If you want to train the model without using saved weights, just delete the files in the `models/` subdirectory, then the program is going to train the model again.
 
-Training progress is written to `log/mnist-training.log`.
+Training progress is written to `log/fashion-mnist-training.log`.
 
 ### Invoke
 
@@ -118,7 +118,7 @@ invoke train
 
 ### Make
 
-Use this in bash, Git Bash, or WSL. The Makefile uses Unix `PYTHONPATH=src python -m mnistnn`, so it is not for stock Windows cmd or PowerShell unless `make` is installed.
+Use this in bash, Git Bash, or WSL. The Makefile uses Unix `PYTHONPATH=src python -m fashion_mnistnn`, so it is not for stock Windows cmd or PowerShell unless `make` is installed.
 
 ```bash
 make train
@@ -132,27 +132,27 @@ bash, Git Bash, or WSL:
 
 ```bash
 export PYTHONPATH=src
-python -m mnistnn
+python -m fashion_mnistnn
 ```
 
 PowerShell:
 
 ```powershell
 $env:PYTHONPATH = "src"
-python -m mnistnn
+python -m fashion_mnistnn
 ```
 
 cmd:
 
 ```bat
 set PYTHONPATH=src
-python -m mnistnn
+python -m fashion_mnistnn
 ```
 
 To train without plot windows, set `PYTHONPATH` as above, then:
 
 ```text
-python -c "from mnistnn.train_mnist import train_mnist; train_mnist(visualize=False)"
+python -c "from fashion_mnistnn.train_fashion_mnist import train_fashion_mnist; train_fashion_mnist(visualize=False)"
 ```
 
 ## Available Commands
@@ -161,7 +161,7 @@ You can use either `make` or `invoke` to run the following commands:
 
 | Command | Makefile | Invoke | Description |
 |---|---|---|---|
-| **Train Network** | `make train` | `invoke train` | Trains the Fashion-MNIST network (`python -m mnistnn`). |
+| **Train Network** | `make train` | `invoke train` | Trains the Fashion-MNIST network (`python -m fashion_mnistnn`). |
 | **Format Code** | `make format` | `invoke format` | Formats the code using Black. |
 | **Check Formatting** | `make format-check` | `invoke format-check` | Checks if the code is formatted correctly without making changes. |
 | **Lint Code** | `make lint` | `invoke lint` | Lints the code with Ruff to find potential issues. |
