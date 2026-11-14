@@ -11,18 +11,20 @@ from typing import TYPE_CHECKING
 import numpy as np
 import numpy.typing as npt
 
-from mnistnn.log_config import configure_file_logging
-from mnistnn.mnist_data_loader import (
-    MNISTDataLoader as MNISTDataLoader,
+from fashion_mnistnn.fashion_mnist_data_loader import (
+    FashionMNISTDataLoader as FashionMNISTDataLoader,
 )
-from mnistnn.mnist_data_loader import (
-    MNISTImagesInfo,
-    MNISTLabelsInfo,
+from fashion_mnistnn.fashion_mnist_data_loader import (
+    FashionMNISTImagesInfo,
+    FashionMNISTLabelsInfo,
 )
-from mnistnn.visualize_mnist import visualize_mnist
+from fashion_mnistnn.log_config import configure_file_logging
+from fashion_mnistnn.visualize_fashion_mnist import visualize_fashion_mnist
 
 if TYPE_CHECKING:
-    from mnistnn.mnist_neural_network import MNISTNeuralNetwork
+    from fashion_mnistnn.fashion_mnist_neural_network import (
+        FashionMNISTNeuralNetwork,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +57,7 @@ def _normalize_images(images: np.ndarray) -> np.ndarray:
 
 
 def _evaluate_test_accuracy(
-    network: MNISTNeuralNetwork,
+    network: FashionMNISTNeuralNetwork,
     test_images: np.ndarray,
     test_labels: np.ndarray,
     batch_size: int,
@@ -107,7 +109,7 @@ def _random_horizontal_flip(
     return batch_images.reshape(-1, 784)
 
 
-def train_mnist(
+def train_fashion_mnist(
     epochs: int = 80,
     batch_size: int = 64,
     learning_rate: float = 0.03,
@@ -115,7 +117,7 @@ def train_mnist(
     weight_decay: float = 1e-4,
     visualize: bool = True,
     append_logs: bool = True,
-) -> MNISTNeuralNetwork:
+) -> FashionMNISTNeuralNetwork:
     """Load Fashion-MNIST and train the network, optionally starting a fresh log."""
     if epochs <= 0:
         raise ValueError('epochs must be greater than zero')
@@ -142,16 +144,18 @@ def train_mnist(
         visualize,
     )
 
-    from mnistnn.data_config import dict_config_test, dict_config_train
-    from mnistnn.mnist_neural_network import MNISTNeuralNetwork
+    from fashion_mnistnn.data_config import dict_config_test, dict_config_train
+    from fashion_mnistnn.fashion_mnist_neural_network import (
+        FashionMNISTNeuralNetwork,
+    )
 
-    data_loader: MNISTDataLoader = MNISTDataLoader(
+    data_loader: FashionMNISTDataLoader = FashionMNISTDataLoader(
         dict_config_train, dict_config_test
     )
-    train_images_info: MNISTImagesInfo = data_loader.training_info[0]
-    train_labels_info: MNISTLabelsInfo = data_loader.training_info[1]
-    test_images_info: MNISTImagesInfo = data_loader.test_info[0]
-    test_labels_info: MNISTLabelsInfo = data_loader.test_info[1]
+    train_images_info: FashionMNISTImagesInfo = data_loader.training_info[0]
+    train_labels_info: FashionMNISTLabelsInfo = data_loader.training_info[1]
+    test_images_info: FashionMNISTImagesInfo = data_loader.test_info[0]
+    test_labels_info: FashionMNISTLabelsInfo = data_loader.test_info[1]
     # The image data is stored as a NumPy array of shape (num_images, rows, cols) 3D
     # The label data is stored as a NumPy array of shape (num_labels,) 1D
     train_images_value: np.ndarray = train_images_info['images']
@@ -215,13 +219,13 @@ def train_mnist(
     )
 
     # Visualize the Fashion-MNIST dataset if visualize is True
-    visualize_mnist(
+    visualize_fashion_mnist(
         train_images=train_images,
         train_labels=train_labels,
         visualize=visualize,
     )
 
-    network: MNISTNeuralNetwork = MNISTNeuralNetwork()
+    network: FashionMNISTNeuralNetwork = FashionMNISTNeuralNetwork()
     train_images = prepared_train_images
     test_images = prepared_test_images
 
@@ -302,4 +306,4 @@ def train_mnist(
     return network
 
 
-__all__ = ['train_mnist']
+__all__ = ['train_fashion_mnist']

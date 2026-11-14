@@ -4,16 +4,16 @@ from pathlib import Path
 
 import numpy as np
 
-from mnistnn.functions.CrossEntropyLoss import CrossEntropyLoss
-from mnistnn.functions.ReLU import ReLU
-from mnistnn.functions.SoftmaxStable import SoftmaxStable
-from mnistnn.layer import Layer
-from mnistnn.layer_parent import LayerParent
-from mnistnn.loss import Loss
-from mnistnn.utils import horizontal_flip_images
+from fashion_mnistnn.functions.CrossEntropyLoss import CrossEntropyLoss
+from fashion_mnistnn.functions.ReLU import ReLU
+from fashion_mnistnn.functions.SoftmaxStable import SoftmaxStable
+from fashion_mnistnn.layer import Layer
+from fashion_mnistnn.layer_parent import LayerParent
+from fashion_mnistnn.loss import Loss
+from fashion_mnistnn.utils import horizontal_flip_images
 
 
-class MNISTNeuralNetwork:
+class FashionMNISTNeuralNetwork:
     """Neural network for Fashion-MNIST clothing classification.
 
     Architecture:

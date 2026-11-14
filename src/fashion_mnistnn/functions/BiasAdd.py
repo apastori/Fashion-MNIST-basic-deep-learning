@@ -2,8 +2,8 @@
 
 import numpy as np
 
-from mnistnn.operation_param import ParamOperation
-from mnistnn.utils.asarray import as_array
+from fashion_mnistnn.operation_param import ParamOperation
+from fashion_mnistnn.utils.asarray import as_array
 
 
 class BiasAdd(ParamOperation):

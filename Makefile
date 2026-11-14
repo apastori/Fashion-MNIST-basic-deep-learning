@@ -84,5 +84,5 @@ run-tests-init:
 # Train the Fashion-MNIST network
 train:
 	@echo "▶ Training Fashion-MNIST network..."
-	PYTHONPATH=src python -m mnistnn
+	PYTHONPATH=src python -m fashion_mnistnn
 	@echo "✅ Training complete"

@@ -2,10 +2,10 @@
 
 import numpy as np
 
-from mnistnn.functions.Dropout import Dropout
-from mnistnn.functions.Linear import Linear
-from mnistnn.layer_parent import LayerParent
-from mnistnn.operation import Operation
+from fashion_mnistnn.functions.Dropout import Dropout
+from fashion_mnistnn.functions.Linear import Linear
+from fashion_mnistnn.layer_parent import LayerParent
+from fashion_mnistnn.operation import Operation
 
 
 class Layer(LayerParent):

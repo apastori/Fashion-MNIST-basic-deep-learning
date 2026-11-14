@@ -5,17 +5,19 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from mnistnn.mnist_neural_network import MNISTNeuralNetwork
+from fashion_mnistnn.fashion_mnist_neural_network import (
+    FashionMNISTNeuralNetwork,
+)
 
 
-class TestMNISTNeuralNetwork:
+class TestFashionMNISTNeuralNetwork:
     """Test suite for the Fashion-MNIST neural network class."""
 
     def test_save_and_load_weights_round_trip(self, tmp_path: Path) -> None:
         """Saved weights must restore identical forward outputs."""
         rng: np.random.Generator = np.random.default_rng(0)
-        source: MNISTNeuralNetwork = MNISTNeuralNetwork()
-        destination: MNISTNeuralNetwork = MNISTNeuralNetwork()
+        source: FashionMNISTNeuralNetwork = FashionMNISTNeuralNetwork()
+        destination: FashionMNISTNeuralNetwork = FashionMNISTNeuralNetwork()
         batch: np.ndarray = rng.normal(size=(8, 784))
 
         weight_path: Path = tmp_path / 'fashion_mnist.npz'

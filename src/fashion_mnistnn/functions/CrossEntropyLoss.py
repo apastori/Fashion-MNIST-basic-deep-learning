@@ -2,8 +2,8 @@
 
 import numpy as np
 
-from mnistnn.loss import Loss
-from mnistnn.utils.asarray import as_array
+from fashion_mnistnn.loss import Loss
+from fashion_mnistnn.utils.asarray import as_array
 
 
 class CrossEntropyLoss(Loss):

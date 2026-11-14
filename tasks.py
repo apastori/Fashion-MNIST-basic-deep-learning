@@ -152,9 +152,9 @@ def run_tests_init(c: Context) -> None:
 
 @task
 def train(c: Context) -> None:
-    """Train the Fashion-MNIST network with ``python -m mnistnn``."""
+    """Train the Fashion-MNIST network with ``python -m fashion_mnistnn``."""
     print("▶ Training Fashion-MNIST network...")
     env = os.environ.copy()
     env["PYTHONPATH"] = "src"
-    c.run(f"{sys.executable} -m mnistnn", env=env)
+    c.run(f"{sys.executable} -m fashion_mnistnn", env=env)
     print("✅ Training complete")

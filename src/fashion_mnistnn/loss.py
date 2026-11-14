@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from mnistnn.utils.shape import assert_same_shape
+from fashion_mnistnn.utils.shape import assert_same_shape
 
 
 class Loss(ABC):

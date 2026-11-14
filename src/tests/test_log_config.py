@@ -5,14 +5,14 @@ from pathlib import Path
 
 import pytest
 
-from mnistnn import log_config
+from fashion_mnistnn import log_config
 
 
 def test_configure_file_logging_appends_or_clears(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Verify append mode preserves entries and clean mode replaces them."""
-    fake_module_path = tmp_path / 'src' / 'mnistnn' / 'log_config.py'
+    fake_module_path = tmp_path / 'src' / 'fashion_mnistnn' / 'log_config.py'
     monkeypatch.setattr(log_config, '__file__', str(fake_module_path))
     logger = logging.Logger('test_configure_file_logging')
 

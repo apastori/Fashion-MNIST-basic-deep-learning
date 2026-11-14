@@ -3,33 +3,33 @@
 import numpy as np
 import pytest
 
-from mnistnn.data_config import dict_config_test, dict_config_train
-from mnistnn.mnist_data_loader import (
-    MNISTDataLoader,
-    MNISTImagesInfo,
-    MNISTLabelsInfo,
+from fashion_mnistnn.data_config import dict_config_test, dict_config_train
+from fashion_mnistnn.fashion_mnist_data_loader import (
+    FashionMNISTDataLoader,
+    FashionMNISTImagesInfo,
+    FashionMNISTLabelsInfo,
 )
-from mnistnn.mnist_visualizer import MNISTVisualizer
+from fashion_mnistnn.fashion_mnist_visualizer import FashionMNISTVisualizer
 
 
-class TestMNISTVisualizer:
+class TestFashionMNISTVisualizer:
     """Test suite for Fashion-MNIST visualizer class."""
 
     @pytest.fixture
-    def data_loader(self) -> MNISTDataLoader:
+    def data_loader(self) -> FashionMNISTDataLoader:
         """Initialize Fashion-MNIST data loader with configuration."""
-        loader: MNISTDataLoader = MNISTDataLoader(
+        loader: FashionMNISTDataLoader = FashionMNISTDataLoader(
             dict_config_train, dict_config_test
         )
         return loader
 
     @pytest.fixture
     def training_data(
-        self, data_loader: MNISTDataLoader
+        self, data_loader: FashionMNISTDataLoader
     ) -> tuple[np.ndarray, np.ndarray]:
         """Retrieve training images and labels."""
-        train_images: MNISTImagesInfo
-        train_labels: MNISTLabelsInfo
+        train_images: FashionMNISTImagesInfo
+        train_labels: FashionMNISTLabelsInfo
         train_images, train_labels = data_loader.training_info
         images_array: np.ndarray = train_images["images"]
         labels_array: np.ndarray = train_labels["labels"]
@@ -43,7 +43,7 @@ class TestMNISTVisualizer:
         labels_array: np.ndarray
         images_array, labels_array = training_data
         try:
-            MNISTVisualizer.plot_single_image(images_array[0], labels_array[0])
+            FashionMNISTVisualizer.plot_single_image(images_array[0], labels_array[0])
         except Exception as e:
             raise AssertionError(
                 f"Plotting single image raised an exception: {e}"
@@ -65,7 +65,7 @@ class TestMNISTVisualizer:
         random_labels: np.ndarray = labels_array[indices]
 
         try:
-            MNISTVisualizer.plot_grid(
+            FashionMNISTVisualizer.plot_grid(
                 random_images,
                 random_labels,
                 num_images=20,

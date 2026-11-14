@@ -10,7 +10,7 @@ def configure_file_logging(
     """Configure training INFO logging to append or start a fresh log file."""
     log_directory: Path = Path(__file__).resolve().parents[2] / 'log'
     log_directory.mkdir(parents=True, exist_ok=True)
-    log_path: Path = log_directory / 'mnist-training.log'
+    log_path: Path = log_directory / 'fashion-mnist-training.log'
     resolved_log_path: str = str(log_path.resolve())
     existing_handler: logging.FileHandler | None = None
 

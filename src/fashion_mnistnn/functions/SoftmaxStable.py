@@ -2,8 +2,8 @@
 
 import numpy as np
 
-from mnistnn.operation import Operation
-from mnistnn.utils.asarray import as_array
+from fashion_mnistnn.operation import Operation
+from fashion_mnistnn.utils.asarray import as_array
 
 
 class SoftmaxStable(Operation):

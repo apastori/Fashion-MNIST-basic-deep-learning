@@ -4,10 +4,10 @@ from abc import abstractmethod
 
 import numpy as np
 
-from mnistnn.layer_parent import LayerParent
-from mnistnn.operation import Operation
-from mnistnn.operation_param import ParamOperation
-from mnistnn.utils.shape import assert_same_shape
+from fashion_mnistnn.layer_parent import LayerParent
+from fashion_mnistnn.operation import Operation
+from fashion_mnistnn.operation_param import ParamOperation
+from fashion_mnistnn.utils.shape import assert_same_shape
 
 
 class GenericLayer(LayerParent):
